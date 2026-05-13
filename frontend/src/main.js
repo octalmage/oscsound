@@ -102,7 +102,7 @@ function renderRow(s, i) {
 
     const path = el('div', {
         className: s.path ? 'path' : 'path empty',
-        textContent: s.path ? basename(s.path) : 'click to choose .wav / .mp3',
+        textContent: s.path ? basename(s.path) : 'click to choose .wav / .mp3 / .ogg',
         title: s.path,
         onclick: async () => {
             const p = await PickFile();

@@ -18,6 +18,7 @@ import (
 	"github.com/gopxl/beep/v2"
 	"github.com/gopxl/beep/v2/mp3"
 	"github.com/gopxl/beep/v2/speaker"
+	"github.com/gopxl/beep/v2/vorbis"
 	"github.com/gopxl/beep/v2/wav"
 	"github.com/hypebeast/go-osc/osc"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -202,7 +203,7 @@ func (a *App) PickFile() (string, error) {
 	return runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
 		Title: "Choose a sound",
 		Filters: []runtime.FileFilter{
-			{DisplayName: "Audio (*.wav, *.mp3)", Pattern: "*.wav;*.mp3"},
+			{DisplayName: "Audio (*.wav, *.mp3, *.ogg)", Pattern: "*.wav;*.mp3;*.ogg"},
 		},
 	})
 }
@@ -648,10 +649,14 @@ func (a *App) writeConfig(c Config) error {
 // --- helpers ---
 
 func decode(path string, f *os.File) (beep.StreamSeekCloser, beep.Format, error) {
-	if strings.EqualFold(filepath.Ext(path), ".mp3") {
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".mp3":
 		return mp3.Decode(f)
+	case ".ogg":
+		return vorbis.Decode(f)
+	default:
+		return wav.Decode(f)
 	}
-	return wav.Decode(f)
 }
 
 func truthy(args []interface{}) bool {

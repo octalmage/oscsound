@@ -13,7 +13,7 @@ into your mic). Useful for streaming!
 1. In VRChat: enable OSC (Action Menu → Options → OSC → Enabled).
 2. Run oscsound. It registers itself with VRChat via OSCQuery.
 3. Add a sound: give it a name, type the avatar parameter name (without the
-   `/avatar/parameters/` prefix), pick a `.wav` or `.mp3` file, choose a type.
+   `/avatar/parameters/` prefix), pick a `.wav`, `.mp3`, or `.ogg` file, choose a type.
 4. Toggle the parameter on your avatar then the matching row flashes and the
    sound plays.
 
