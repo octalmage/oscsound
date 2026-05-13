@@ -1,0 +1,56 @@
+# oscsound
+
+A tiny soundboard that plays local audio when VRChat fires avatar OSC parameters.
+
+VRChat caps active avatar audio sources at 3, which is rough for anything with
+more than a couple SFX. This sidesteps that: VRChat sends OSC, this app plays
+the sound through your PC's audio output. OBS picks it up like any other game
+audio. Other players in VRChat won't hear it without extra routing (VB-Cable
+into your mic). Useful for streaming!
+
+## Usage
+
+1. In VRChat: enable OSC (Action Menu → Options → OSC → Enabled).
+2. Run oscsound. It registers itself with VRChat via OSCQuery.
+3. Add a sound: give it a name, type the avatar parameter name (without the
+   `/avatar/parameters/` prefix), pick a `.wav` or `.mp3` file, choose a type.
+4. Toggle the parameter on your avatar then the matching row flashes and the
+   sound plays.
+
+### Trigger types
+
+- **one-shot**: plays once on each rising edge. Stomps, hits, bursts.
+- **loop**: starts on true, loops forever, stops on false. Rumble, ambience.
+
+Multiple sounds (one-shots, loops, or both) play and mix together: there's no
+limit.
+
+### Packs
+
+- **Export**: writes a single `.zip` containing every sound file and a
+  `manifest.json` linking each to its avatar parameter and type.
+- **Import**: drop someone's pack in, hit Import, you're configured.
+
+Config is saved to your OS config dir (`~/Library/Application Support/oscsound/`
+on macOS, `%AppData%\oscsound\` on Windows). Imported pack contents live under
+`packs/` in the same directory.
+
+## Dev
+
+```
+wails dev
+```
+
+To smoke-test without VRChat, send a bool OSC message to `127.0.0.1:9001`
+at `/avatar/parameters/<YourParam>` using any OSC client.
+
+## Build
+
+```
+wails build                                  # current platform
+wails build -platform windows/amd64          # cross-build for Windows (needs docker)
+```
+
+## License
+
+GPL-3.0

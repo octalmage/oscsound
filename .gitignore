@@ -1,0 +1,18 @@
+build/bin
+frontend/dist
+frontend/node_modules
+frontend/wailsjs
+node_modules
+
+# go build output in repo root
+/oscsound
+/oscsound.exe
+
+# wails dev artefacts
+.wails
+*.app
+
+# editor / OS
+.DS_Store
+.vscode
+.idea
