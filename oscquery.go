@@ -57,13 +57,13 @@ func startOSCQuery(name string) (*oscquery, error) {
 	srv := &http.Server{Handler: mux}
 	go srv.Serve(httpL)
 
-	mdnsOSC, err := zeroconf.Register(name, "_osc._udp", "local.", oscPort, []string{"txtvers=1"}, nil)
+	mdnsOSC, err := zeroconf.RegisterProxy(name, "_osc._udp", "local.", oscPort, "localhost.local.", []string{"127.0.0.1"}, []string{"txtvers=1"}, nil)
 	if err != nil {
 		srv.Shutdown(context.Background())
 		oscConn.Close()
 		return nil, fmt.Errorf("mdns osc: %w", err)
 	}
-	mdnsJSON, err := zeroconf.Register(name, "_oscjson._tcp", "local.", httpL.Addr().(*net.TCPAddr).Port, []string{"txtvers=1"}, nil)
+	mdnsJSON, err := zeroconf.RegisterProxy(name, "_oscjson._tcp", "local.", httpL.Addr().(*net.TCPAddr).Port, "localhost.local.", []string{"127.0.0.1"}, []string{"txtvers=1"}, nil)
 	if err != nil {
 		mdnsOSC.Shutdown()
 		srv.Shutdown(context.Background())
@@ -119,8 +119,9 @@ func rootNode() oscNode {
 		Contents: map[string]oscNode{
 			"avatar": {
 				FullPath: "/avatar",
+				Access:   2,
 				Contents: map[string]oscNode{
-					"parameters": {FullPath: "/avatar/parameters"},
+					"parameters": {FullPath: "/avatar/parameters", Access: 2},
 					"change":     {FullPath: "/avatar/change", Access: 3, Type: "s"},
 				},
 			},
