@@ -135,6 +135,10 @@ button.del {
     padding: 6px 8px;
 }
 
+button.play-stop {
+    width: 50px;
+}
+
 .row input[type="range"] {
     -webkit-appearance: none;
     appearance: none;

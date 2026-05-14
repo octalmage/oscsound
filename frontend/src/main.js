@@ -136,10 +136,10 @@ function renderRow(s, i) {
 
     const playing = previews.has(i);
     const test = el('button', {
+        className: playing ? 'play-stop active' : 'play-stop',
         textContent: playing ? 'stop' : 'play',
         onclick: () => onTest(i, s),
     });
-    if (playing) test.classList.add('active');
 
     const del = el('button', {
         className: 'del',
