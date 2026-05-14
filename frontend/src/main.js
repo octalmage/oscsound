@@ -8,6 +8,19 @@ import { EventsOn } from '../wailsjs/runtime/runtime';
 
 const root = document.querySelector('#app');
 
+// Logarithmic volume curve so the slider feels perceptually even.
+// The slider (0–100) maps to amplitude (0–1) through a 40 dB range.
+// Thank you https://www.dr-lex.be/info-stuff/volumecontrols.html
+const DB_RANGE = 40;
+function sliderToVolume(slider) {
+    if (slider === 0) return 0;
+    return Math.pow(10, (slider - 100) / (DB_RANGE / 2));
+}
+function volumeToSlider(volume) {
+    if (!volume) return 0;
+    return Math.round(Math.max(0, 100 + (DB_RANGE / 2) * Math.log10(volume)));
+}
+
 let cfg = { sounds: [] };
 let status = { port: 0, oscQuery: false };
 
@@ -102,7 +115,7 @@ function renderRow(s, i) {
 
     const path = el('div', {
         className: s.path ? 'path' : 'path empty',
-        textContent: s.path ? basename(s.path) : 'click to choose .wav / .mp3 / .ogg',
+        textContent: s.path ? basename(s.path) : 'click to choose sound',
         title: s.path,
         onclick: async () => {
             const p = await PickFile();
@@ -110,10 +123,10 @@ function renderRow(s, i) {
         },
     });
 
-    const pct = Math.round((s.volume ?? 1) * 100);
-    const vol = el('input', { type: 'range', min: 0, max: 100, value: pct, title: `${pct}%` });
+    const sliderPct = volumeToSlider(s.volume ?? 1);
+    const vol = el('input', { type: 'range', min: 0, max: 100, value: sliderPct, title: `${sliderPct}%` });
     vol.oninput = () => {
-        const v = vol.value / 100;
+        const v = sliderToVolume(+vol.value);
         cfg.sounds[i].volume = v;
         vol.title = `${vol.value}%`;
         if (previews.has(i)) SetPreviewVolume(previews.get(i), v);
