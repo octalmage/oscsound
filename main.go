@@ -18,6 +18,8 @@ func main() {
 		Title:            "oscsound",
 		Width:            720,
 		Height:           560,
+		MinWidth:         600,
+		MinHeight:        220,
 		AssetServer:      &assetserver.Options{Assets: assets},
 		BackgroundColour: &options.RGBA{R: 24, G: 24, B: 27, A: 1},
 		OnStartup:        app.startup,
