@@ -8,17 +8,17 @@ import { EventsOn } from '../wailsjs/runtime/runtime';
 
 const root = document.querySelector('#app');
 
-// Logarithmic volume curve so the slider feels perceptually even.
-// The slider (0–100) maps to amplitude (0–1) through a 40 dB range.
-// Thank you https://www.dr-lex.be/info-stuff/volumecontrols.html
+// Map the 0–100 slider to amplitude logarithmically so it feels even across the range.
+// DB_RANGE is the actual dB span: top of the slider is 0 dB, bottom is -DB_RANGE dB.
+// https://www.dr-lex.be/info-stuff/volumecontrols.html
 const DB_RANGE = 40;
 function sliderToVolume(slider) {
     if (slider === 0) return 0;
-    return Math.pow(10, (slider - 100) / (DB_RANGE / 2));
+    return Math.pow(10, (slider - 100) * DB_RANGE / 2000);
 }
 function volumeToSlider(volume) {
     if (!volume) return 0;
-    return Math.round(Math.max(0, 100 + (DB_RANGE / 2) * Math.log10(volume)));
+    return Math.round(Math.max(0, 100 + Math.log10(volume) * 2000 / DB_RANGE));
 }
 
 let cfg = { sounds: [] };
